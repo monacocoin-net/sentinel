@@ -1,12 +1,11 @@
 #!/usr/bin/env python
-#import MySQLdb
 import sys
 import os
 sys.path.append(os.path.normpath(os.path.join(os.path.dirname(__file__), '../lib')))
 import init
 import config
 import misc
-from monoecid import monoeciDaemon
+from monoecid import MonoeciDaemon
 from models import Superblock, Proposal, GovernanceObject, Watchdog
 from models import VoteSignals, VoteOutcomes, Transient
 import socket
@@ -59,6 +58,21 @@ def watchdog_check(monoecid):
             wd.vote(monoecid, VoteSignals.delete, VoteOutcomes.yes)
 
     printdbg("leaving watchdog_check")
+
+
+def prune_expired_proposals(monoecid):
+    # vote delete for old proposals
+    for proposal in Proposal.expired(monoecid.superblockcycle()):
+        proposal.vote(monoecid, VoteSignals.delete, VoteOutcomes.yes)
+
+
+# ping monoecid
+def sentinel_ping(monoecid):
+    printdbg("in sentinel_ping")
+
+    monoecid.ping()
+
+    printdbg("leaving sentinel_ping")
 
 
 def attempt_superblock_creation(monoecid):
@@ -143,7 +157,7 @@ def is_monoecid_port_open(monoecid):
 
 
 def main():
-    monoecid = monoeciDaemon.from_monoeci_conf(config.monoeci_conf)
+    monoecid = MonoeciDaemon.from_monoeci_conf(config.monoeci_conf)
     options = process_args()
 
     # check monoecid connectivity
@@ -191,11 +205,17 @@ def main():
     # load "gobject list" rpc command data, sync objects into internal database
     perform_monoecid_object_sync(monoecid)
 
-    # delete old watchdog objects, create a new if necessary
-    watchdog_check(monoecid)
+    if monoecid.has_sentinel_ping:
+        sentinel_ping(monoecid)
+    else:
+        # delete old watchdog objects, create a new if necessary
+        watchdog_check(monoecid)
 
     # auto vote network objects as valid/invalid
     # check_object_validity(monoecid)
+
+    # vote to delete expired proposals
+    prune_expired_proposals(monoecid)
 
     # create a Superblock if necessary
     attempt_superblock_creation(monoecid)

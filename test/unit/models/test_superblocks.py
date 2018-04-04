@@ -123,8 +123,8 @@ def superblock():
 
 
 def test_superblock_is_valid(superblock):
-    from monoecid import monoeciDaemon
-    monoecid = monoeciDaemon.from_monoeci_conf(config.monoeci_conf)
+    from monoecid import MonoeciDaemon
+    monoecid = MonoeciDaemon.from_monoeci_conf(config.monoeci_conf)
 
     orig = Superblock(**superblock.get_dict())  # make a copy
 
@@ -213,8 +213,8 @@ def test_serialisable_fields():
 def test_deterministic_superblock_creation(go_list_proposals):
     import monoecilib
     import misc
-    from monoecid import monoeciDaemon
-    monoecid = monoeciDaemon.from_monoeci_conf(config.monoeci_conf)
+    from monoecid import MonoeciDaemon
+    monoecid = MonoeciDaemon.from_monoeci_conf(config.monoeci_conf)
     for item in go_list_proposals:
         (go, subobj) = GovernanceObject.import_gobject_from_monoecid(monoecid, item)
 
@@ -231,8 +231,8 @@ def test_deterministic_superblock_creation(go_list_proposals):
 
 
 def test_deterministic_superblock_selection(go_list_superblocks):
-    from monoecid import monoeciDaemon
-    monoecid = monoeciDaemon.from_monoeci_conf(config.monoeci_conf)
+    from monoecid import MonoeciDaemon
+    monoecid = MonoeciDaemon.from_monoeci_conf(config.monoeci_conf)
 
     for item in go_list_superblocks:
         (go, subobj) = GovernanceObject.import_gobject_from_monoecid(monoecid, item)

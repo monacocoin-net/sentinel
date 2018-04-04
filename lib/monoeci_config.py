@@ -7,7 +7,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lib'))
 from misc import printdbg
 
 
-class monoeciConfig():
+class MonoeciConfig():
 
     @classmethod
     def slurp_config_file(self, filename):
@@ -33,7 +33,7 @@ class monoeciConfig():
         # python >= 2.7
         creds = {key: value for (key, value) in match}
 
-        # standard monoeci defaults...
+        # standard Monoeci defaults...
         default_port = 24156 if (network == 'mainnet') else 19998
 
         # use default port for network if not specified in monoeci.conf

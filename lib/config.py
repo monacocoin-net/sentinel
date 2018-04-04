@@ -3,13 +3,15 @@
 """
 import sys
 import os
-from monoeci_config import monoeciConfig
+from monoeci_config import MonoeciConfig
 
 default_sentinel_config = os.path.normpath(
     os.path.join(os.path.dirname(__file__), '../sentinel.conf')
 )
 sentinel_config_file = os.environ.get('SENTINEL_CONFIG', default_sentinel_config)
-sentinel_cfg = monoeciConfig.tokenize(sentinel_config_file)
+sentinel_cfg = MonoeciConfig.tokenize(sentinel_config_file)
+sentinel_version = "1.1.0"
+min_monoecid_proto_version_with_sentinel_ping = 70207
 
 
 def get_monoeci_conf():
@@ -17,7 +19,7 @@ def get_monoeci_conf():
 
     monoeci_conf = os.path.join(home, ".monoeciCore/monoeci.conf")
     if sys.platform == 'darwin':
-        monoeci_conf = os.path.join(home, "Library/Application Support/monoeciCore/monoeci.conf")
+        monoeci_conf = os.path.join(home, "Library/Application Support/MonoeciCore/monoeci.conf")
 
     monoeci_conf = sentinel_cfg.get('monoeci_conf', monoeci_conf)
 

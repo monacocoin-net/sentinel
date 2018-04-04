@@ -65,7 +65,7 @@ def has_monoeci_conf():
 
     # ensure monoeci_conf exists & readable
     #
-    # if not, print a message stating that monoeci Core must be installed and
+    # if not, print a message stating that Monoeci Core must be installed and
     # configured, including JSONRPC access in monoeci.conf
     try:
         f = io.open(config.monoeci_conf)
@@ -96,7 +96,7 @@ def main():
         sys.exit(1)
 
     if not has_monoeci_conf():
-        print("monoeciCore must be installed and configured, including JSONRPC access in monoeci.conf")
+        print("MonoeciCore must be installed and configured, including JSONRPC access in monoeci.conf")
         sys.exit(1)
 
 

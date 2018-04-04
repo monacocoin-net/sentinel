@@ -1,12 +1,12 @@
-# monoeci Sentinel  
+# Monoeci Sentinel
+
 From original code https://github.com/dashpay/sentinel
 
+An all-powerful toolset for Monoeci.
 
-An all-powerful toolset for monoeci.
+Sentinel is an autonomous agent for persisting, processing and automating Monoeci V12.1 governance objects and tasks, and for expanded functions in the upcoming Monoeci V13 release (Evolution).
 
-Sentinel is an autonomous agent for persisting, processing and automating monoeci V12.1 governance objects and tasks, and for expanded functions in the upcoming monoeci V13 release (Evolution).
-
-Sentinel is implemented as a Python application that binds to a local version 12.1 monoecid instance on each monoeci V12.1 Masternode.
+Sentinel is implemented as a Python application that binds to a local version 12.1 monoecid instance on each Monoeci V12.1 Masternode.
 
 This guide covers installing Sentinel onto an existing 12.1 Masternode in Ubuntu 14.04 / 16.04.
 
@@ -23,7 +23,7 @@ Update system packages and ensure virtualenv is installed:
     $ sudo apt-get update
     $ sudo apt-get -y install python-virtualenv
 
-Make sure the local monoeci daemon running is at least version 12.1 (120100)
+Make sure the local Monoeci daemon running is at least version 12.1 (120100)
 
     $ monoeci-cli getinfo | grep version
 
@@ -31,7 +31,7 @@ Make sure the local monoeci daemon running is at least version 12.1 (120100)
 
 Clone the Sentinel repo and install Python dependencies.
 
-    $ git clone https://github.com/monoeci-net/sentinel.git && cd sentinel
+    $ git clone https://github.com/monacocoin-net/sentinel.git && cd sentinel
     $ virtualenv ./venv
     $ ./venv/bin/pip install -r requirements.txt
 
@@ -67,8 +67,22 @@ To view debug output, set the `SENTINEL_DEBUG` environment variable to anything 
 
 ## Contributing
 
-Please follow the [monoeciCore guidelines for contributing](https://github.com/monoecipay/monoeci/blob/v0.12.1.x/CONTRIBUTING.md).
+Please follow the [MonoeciCore guidelines for contributing](https://github.com/monacocoin-net/monoeci-core/blob/v0.12.1.x/CONTRIBUTING.md).
+
+Specifically:
+
+* [Contributor Workflow](https://github.com/monacocoin-net/monoeci-core/blob/v0.12.1.x/CONTRIBUTING.md#contributor-workflow)
+
+    To contribute a patch, the workflow is as follows:
+
+    * Fork repository
+    * Create topic branch
+    * Commit patches
+
+    In general commits should be atomic and diffs should be easy to read. For this reason do not mix any formatting fixes or code moves with actual code changes.
+
+    Commit messages should be verbose by default, consisting of a short subject line (50 chars max), a blank line and detailed explanatory text as separate paragraph(s); unless the title alone is self-explanatory (like "Corrected typo in main.cpp") then a single title line is sufficient. Commit messages should be helpful to people reading your code in the future, so explain the reasoning for your decisions. Further explanation [here](http://chris.beams.io/posts/git-commit/).
 
 ### License
 
-Released under the MIT license, under the same terms as monoeciCore itself. See [LICENSE](LICENSE) for more info.
+Released under the MIT license, under the same terms as MonoeciCore itself. See [LICENSE](LICENSE) for more info.

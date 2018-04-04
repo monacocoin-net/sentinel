@@ -9,10 +9,10 @@ import config
 from models import Superblock, Proposal, GovernanceObject, Setting, Signal, Vote, Outcome, Watchdog
 from models import VoteSignals, VoteOutcomes
 from peewee import PeeweeException  # , OperationalError, IntegrityError
-from monoecid import monoeciDaemon
+from monoecid import MonoeciDaemon
 import monoecilib
 from decimal import Decimal
-monoecid = monoeciDaemon.from_monoeci_conf(config.monoeci_conf)
+monoecid = MonoeciDaemon.from_monoeci_conf(config.monoeci_conf)
 import misc
 # ==============================================================================
 # do stuff here

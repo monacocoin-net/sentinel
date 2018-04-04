@@ -8,12 +8,12 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'lib'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 import config
 
-from monoecid import monoeciDaemon
-from monoeci_config import monoeciConfig
+from monoecid import MonoeciDaemon
+from monoeci_config import MonoeciConfig
 
 
 def test_monoecid():
-    config_text = monoeciConfig.slurp_config_file(config.monoeci_conf)
+    config_text = MonoeciConfig.slurp_config_file(config.monoeci_conf)
     network = 'mainnet'
     is_testnet = False
     genesis_hash = u'0000005be1eb05b05fb45ae38ee9c1441514a65343cd146100a574de4278f1a3'
@@ -23,13 +23,13 @@ def test_monoecid():
             is_testnet = True
             genesis_hash = u'000008f18ad6913eed878632efbb83909272d493e5c065789330eb23ab65b5cf'
 
-    creds = monoeciConfig.get_rpc_creds(config_text, network)
-    monoecid = monoeciDaemon(**creds)
+    creds = MonoeciConfig.get_rpc_creds(config_text, network)
+    monoecid = MonoeciDaemon(**creds)
     assert monoecid.rpc_command is not None
 
     assert hasattr(monoecid, 'rpc_connection')
 
-    # monoeci testnet block 0 hash == 00000bafbc94add76cb75e2ec92894837288a481e5c005f6563d91623bf8bc2c
+    # Monoeci testnet block 0 hash == 00000bafbc94add76cb75e2ec92894837288a481e5c005f6563d91623bf8bc2c
     # test commands without arguments
     info = monoecid.rpc_command('getinfo')
     info_keys = [

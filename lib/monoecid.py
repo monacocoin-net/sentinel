@@ -13,7 +13,7 @@ from decimal import Decimal
 import time
 
 
-class monoeciDaemon():
+class MonoeciDaemon():
     def __init__(self, **kwargs):
         host = kwargs.get('host', '127.0.0.1')
         user = kwargs.get('user')
@@ -32,9 +32,9 @@ class monoeciDaemon():
 
     @classmethod
     def from_monoeci_conf(self, monoeci_dot_conf):
-        from monoeci_config import monoeciConfig
-        config_text = monoeciConfig.slurp_config_file(monoeci_dot_conf)
-        creds = monoeciConfig.get_rpc_creds(config_text, config.network)
+        from monoeci_config import MonoeciConfig
+        config_text = MonoeciConfig.slurp_config_file(monoeci_dot_conf)
+        creds = MonoeciConfig.get_rpc_creds(config_text, config.network)
 
         return self(**creds)
 
@@ -63,7 +63,8 @@ class monoeciDaemon():
 
         try:
             status = self.rpc_command('masternode', 'status')
-            my_vin = parse_masternode_status_vin(status['vin'])
+            mn_outpoint = status.get('outpoint') or status.get('vin')
+            my_vin = parse_masternode_status_vin(mn_outpoint)
         except JSONRPCException as e:
             pass
 
@@ -200,6 +201,7 @@ class monoeciDaemon():
         return (self.MASTERNODE_WATCHDOG_MAX_SECONDS // 2)
 
     def estimate_block_time(self, height):
+        import monoecilib
         """
         Called by block_height_to_epoch if block height is in the future.
         Call `block_height_to_epoch` instead of this method.
@@ -212,8 +214,7 @@ class monoeciDaemon():
         if (diff < 0):
             raise Exception("Oh Noes.")
 
-        future_minutes = 2.62 * diff
-        future_seconds = 60 * future_minutes
+        future_seconds = monoecilib.blocks_to_seconds(diff)
         estimated_epoch = int(time.time() + future_seconds)
 
         return estimated_epoch
@@ -237,3 +238,11 @@ class monoeciDaemon():
                 raise e
 
         return epoch
+
+    @property
+    def has_sentinel_ping(self):
+        getinfo = self.rpc_command('getinfo')
+        return (getinfo['protocolversion'] >= config.min_monoecid_proto_version_with_sentinel_ping)
+
+    def ping(self):
+        self.rpc_command('sentinelping', config.sentinel_version)

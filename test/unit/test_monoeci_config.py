@@ -6,7 +6,7 @@ os.environ['SENTINEL_CONFIG'] = os.path.normpath(os.path.join(os.path.dirname(__
 os.environ['SENTINEL_ENV'] = 'test'
 sys.path.append(os.path.normpath(os.path.join(os.path.dirname(__file__), '../../lib')))
 import config
-from monoeci_config import monoeciConfig
+from monoeci_config import MonoeciConfig
 
 
 @pytest.fixture
@@ -35,7 +35,7 @@ rpcport={rpcport}
 
 def test_get_rpc_creds():
     monoeci_config = monoeci_conf()
-    creds = monoeciConfig.get_rpc_creds(monoeci_config, 'testnet')
+    creds = MonoeciConfig.get_rpc_creds(monoeci_config, 'testnet')
 
     for key in ('user', 'password', 'port'):
         assert key in creds
@@ -44,7 +44,7 @@ def test_get_rpc_creds():
     assert creds.get('port') == 29241
 
     monoeci_config = monoeci_conf(rpcpassword='s00pers33kr1t', rpcport=8000)
-    creds = monoeciConfig.get_rpc_creds(monoeci_config, 'testnet')
+    creds = MonoeciConfig.get_rpc_creds(monoeci_config, 'testnet')
 
     for key in ('user', 'password', 'port'):
         assert key in creds
@@ -53,7 +53,7 @@ def test_get_rpc_creds():
     assert creds.get('port') == 8000
 
     no_port_specified = re.sub('\nrpcport=.*?\n', '\n', monoeci_conf(), re.M)
-    creds = monoeciConfig.get_rpc_creds(no_port_specified, 'testnet')
+    creds = MonoeciConfig.get_rpc_creds(no_port_specified, 'testnet')
 
     for key in ('user', 'password', 'port'):
         assert key in creds

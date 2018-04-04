@@ -78,9 +78,9 @@ def proposal():
 
 
 def test_proposal_is_valid(proposal):
-    from monoecid import monoeciDaemon
+    from monoecid import MonoeciDaemon
     import monoecilib
-    monoecid = monoeciDaemon.from_monoeci_conf(config.monoeci_conf)
+    monoecid = MonoeciDaemon.from_monoeci_conf(config.monoeci_conf)
 
     orig = Proposal(**proposal.get_dict())  # make a copy
 
@@ -149,7 +149,7 @@ def test_proposal_is_valid(proposal):
     proposal.payment_address = '221 B Baker St., London, United Kingdom'
     assert proposal.is_valid() is False
 
-    # this is actually the monoeci foundation multisig address...
+    # this is actually the Monoeci foundation multisig address...
     proposal.payment_address = '7gnwGHt17heGpG9Crfeh4KGpYNFugPhJdh'
     assert proposal.is_valid() is False
 
@@ -207,6 +207,22 @@ def test_proposal_is_valid(proposal):
     assert proposal.is_valid() is False
 
 
+def test_proposal_is_expired(proposal):
+    cycle = 24  # testnet
+    now = misc.now()
+
+    proposal.start_epoch = now - (86400 * 2)  # two days ago
+    proposal.end_epoch = now - (60 * 60)  # expired one hour ago
+    assert proposal.is_expired(superblockcycle=cycle) is False
+
+    # fudge factor + a 24-block cycle == an expiry window of 9086, so...
+    proposal.end_epoch = now - 9085
+    assert proposal.is_expired(superblockcycle=cycle) is False
+
+    proposal.end_epoch = now - 9087
+    assert proposal.is_expired(superblockcycle=cycle) is True
+
+
 def test_proposal_is_deletable(proposal):
     now = misc.now()
     assert proposal.is_deletable() is False
@@ -221,8 +237,8 @@ def test_proposal_is_deletable(proposal):
 
 # deterministic ordering
 def test_approved_and_ranked(go_list_proposals):
-    from monoecid import monoeciDaemon
-    monoecid = monoeciDaemon.from_monoeci_conf(config.monoeci_conf)
+    from monoecid import MonoeciDaemon
+    monoecid = MonoeciDaemon.from_monoeci_conf(config.monoeci_conf)
 
     for item in go_list_proposals:
         (go, subobj) = GovernanceObject.import_gobject_from_monoecid(monoecid, item)
